@@ -34,7 +34,7 @@ const ReTinaExamples = ({ examples }: Props) => {
   if (!example) return null
 
   return (
-    <main class="m-auto flex w-full max-w-2xl flex-col justify-center gap-6 p-2 pt-8 md:max-w-6xl md:flex-row">
+    <main class="m-auto flex w-full max-w-3xl flex-col justify-center gap-6 p-2 pt-8 md:max-w-6xl md:flex-row">
       <LeftPanel
         currentExample={currentExample}
         examples={examples}

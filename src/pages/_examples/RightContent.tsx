@@ -10,7 +10,7 @@ const RightPanel = ({ example, code, sketch }: Props) => {
   const routeUrl = `${import.meta.env.DEV ? '' : '/re-tina'}/${example.route}`
 
   return (
-    <div className="flex min-w-0 flex-1 flex-col gap-6 overflow-hidden">
+    <div className="flex flex-2 min-w-0 flex-col gap-6 overflow-hidden">
       <iframe src={routeUrl} height="400" width="100%" />
       <a
         href={routeUrl}
