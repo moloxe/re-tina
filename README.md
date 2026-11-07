@@ -128,29 +128,29 @@ rt.start()
 
 Interactive sketches located under `src/pages/_sketches/`:
 
-| Sketch | Type | Description |
-| --- | --- | --- |
-| `2D-game-of-life.ts` | 2D | Cellular automata simulation with custom initial texture state |
-| `2D-magnets.ts` | 2D | Magnetic field lines and interference patterns |
-| `2D-microphone-fft.ts` | 2D | Audio-reactive frequency waterfall visualizer via microphone input |
-| `2D-pattern.ts` | 2D | Sine/wave interference patterns and continuous trigonometric functions |
-| `2D-vector-field.ts` | 2D | Dynamic 2D vector field visualization with complex numbers math |
-| `2D-voronoi.ts` | 2D | GPU-accelerated Voronoi diagram and distance metrics |
-| `3D-collisions-physics-1.ts` | 3D | Physics simulation with multiple bouncing capsules, floor collision and nebula background |
-| `3D-collisions-physics-2.ts` | 3D | Interactive character physics with terrain collision and third-person controls |
-| `3D-collisions.ts` | 3D | Real-time GPU collision detection between orbital spheres and obstacle box |
-| `3D-fractal-bm-terrain.ts` | 3D | Procedural mountainous terrain generated with Fractal Brownian Motion and volumetric fog |
-| `3D-fractal-mandelbulb.ts` | 3D | 3D Mandelbulb fractal rendered with iterative spherical coordinates |
-| `3D-fractal-trees.ts` | 3D | Infinite recursive 3D fractal branching tree structure |
-| `3D-fractal-world.ts` | 3D | Infinite folding space fractal world with Lambertian shading |
-| `3D-modeling.ts` | 3D | Smooth-unioned geometric primitives forming an avatar with Blinn-Phong lighting |
-| `3D-morphology-abstract.ts` | 3D | Abstract morphing geometry with smooth boolean subtractions |
-| `3D-morphology.ts` | 3D | Morphing interpolation between torus and box shapes |
-| `3D-periodic-surface-beat.ts` | 3D | Periodic triply minimal surface animated with rhythmic BPM timing |
-| `3D-periodic-surface.ts` | 3D | Infinite repeating mathematical periodic gyroid/Schwarz minimal surface |
-| `3D-simplex-noise-ocean-fft.ts` | 3D | Audio-reactive ocean surface with starry sky and moon reflection |
-| `3D-simplex-noise-ocean.ts` | 3D | Layered 3D simplex noise ocean waves with specular lighting |
-| `3D-simplex-noise-terrain.ts` | 3D | Endless undulating landscape with carved dynamic light capsule |
+| Sketch                          | Type | Description                                                                               |
+| ------------------------------- | ---- | ----------------------------------------------------------------------------------------- |
+| `2D-game-of-life.ts`            | 2D   | Cellular automata simulation with custom initial texture state                            |
+| `2D-magnets.ts`                 | 2D   | Magnetic field lines and interference patterns                                            |
+| `2D-microphone-fft.ts`          | 2D   | Audio-reactive frequency waterfall visualizer via microphone input                        |
+| `2D-pattern.ts`                 | 2D   | Sine/wave interference patterns and continuous trigonometric functions                    |
+| `2D-vector-field.ts`            | 2D   | Dynamic 2D vector field visualization with complex numbers math                           |
+| `2D-voronoi.ts`                 | 2D   | GPU-accelerated Voronoi diagram and distance metrics                                      |
+| `3D-collisions-physics-1.ts`    | 3D   | Physics simulation with multiple bouncing capsules, floor collision and nebula background |
+| `3D-collisions-physics-2.ts`    | 3D   | Interactive character physics with terrain collision and third-person controls            |
+| `3D-collisions.ts`              | 3D   | Real-time GPU collision detection between orbital spheres and obstacle box                |
+| `3D-fractal-bm-terrain.ts`      | 3D   | Procedural mountainous terrain generated with Fractal Brownian Motion and volumetric fog  |
+| `3D-fractal-mandelbulb.ts`      | 3D   | 3D Mandelbulb fractal rendered with iterative spherical coordinates                       |
+| `3D-fractal-trees.ts`           | 3D   | Infinite recursive 3D fractal branching tree structure                                    |
+| `3D-fractal-world.ts`           | 3D   | Infinite folding space fractal world with Lambertian shading                              |
+| `3D-modeling.ts`                | 3D   | Smooth-unioned geometric primitives forming an avatar with Blinn-Phong lighting           |
+| `3D-morphology-abstract.ts`     | 3D   | Abstract morphing geometry with smooth boolean subtractions                               |
+| `3D-morphology.ts`              | 3D   | Morphing interpolation between torus and box shapes                                       |
+| `3D-periodic-surface-beat.ts`   | 3D   | Periodic triply minimal surface animated with rhythmic BPM timing                         |
+| `3D-periodic-surface.ts`        | 3D   | Infinite repeating mathematical periodic gyroid/Schwarz minimal surface                   |
+| `3D-simplex-noise-ocean-fft.ts` | 3D   | Audio-reactive ocean surface with starry sky and moon reflection                          |
+| `3D-simplex-noise-ocean.ts`     | 3D   | Layered 3D simplex noise ocean waves with specular lighting                               |
+| `3D-simplex-noise-terrain.ts`   | 3D   | Endless undulating landscape with carved dynamic light capsule                            |
 
 ---
 

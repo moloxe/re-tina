@@ -12,15 +12,20 @@ const LeftPanel = ({ examples, currentExample, setCurrentExample }: Props) => {
 
   return (
     <div className="flex flex-1 flex-col gap-6">
-      <a class="text-primary w-fit" target="_blank" href={editorUrl}>
-        <h3>Try the new editor ↗️</h3>
-      </a>
-
-      <img
-        src={ReTinaImg.src}
-        alt="ReTina logo"
-        className="w-full rounded-lg"
-      />
+      <div class="flex flex-col">
+        <img
+          src={ReTinaImg.src}
+          alt="ReTina logo"
+          className="w-full rounded-lg"
+        />
+        <a
+          class="text-primary w-fit ml-auto mr-2 text-sm"
+          target="_blank"
+          href={editorUrl}
+        >
+          Open editor
+        </a>
+      </div>
 
       <div>
         ReTina, a simple raymarch engine. It also works well as a tool for

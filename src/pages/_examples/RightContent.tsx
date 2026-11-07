@@ -12,16 +12,13 @@ const RightPanel = ({ example, code, sketch }: Props) => {
   return (
     <div className="flex flex-2 flex-col gap-6">
       <iframe src={routeUrl} height="400" width="100%" />
-      <h3>
-        {example.route}:{' '}
-        <a
-          href={routeUrl}
-          className="text-primary ml-auto w-fit underline md:ml-0"
-          target="_blank"
-        >
-          Open fullscreen ↗️
-        </a>
-      </h3>
+      <a
+        href={routeUrl}
+        className="text-primary ml-auto w-fit underline md:ml-0"
+        target="_blank"
+      >
+        {example.route}
+      </a>
       <pre className="relative bg-[#282c34]">
         <button
           className="absolute top-2 right-2 rounded border bg-[#282c34] px-2 text-sm"

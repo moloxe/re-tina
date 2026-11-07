@@ -10,21 +10,12 @@ type Props = {
   allowIndexing?: boolean
   seoDescription?: string
   seoImg?: string
-  showPaths?: boolean
-  hidePathsOnPrint?: boolean
   useViewTransitions?: boolean
   bodyClass?: string
 }
 
-const {
-  htmlClass,
-  showPaths,
-  seoDescription,
-  seoImg,
-  hidePathsOnPrint,
-  useViewTransitions,
-  bodyClass,
-} = Astro.props
+const { htmlClass, seoDescription, seoImg, useViewTransitions, bodyClass } =
+  Astro.props
 
 const lang = Astro.props.lang || 'en'
 const title = Astro.props.title || 'ReTina'
@@ -33,21 +24,6 @@ const allowIndexing = Astro.props.allowIndexing ?? true
 
 const basePrefix = import.meta.env.DEV ? '' : '/re-tina'
 const pathname = Astro.url.pathname.replace(/^\/re-tina/, '') || '/'
-
-const paths = (() => {
-  const paths: { pathname: string; name: string }[] = []
-  const parts = pathname.split('/').filter(Boolean)
-  paths.push({ pathname: `${basePrefix}/`, name: 'Home' })
-  let accumulated = ''
-  parts.forEach((part) => {
-    accumulated += `/${part}`
-    paths.push({
-      pathname: `${basePrefix}${accumulated}`,
-      name: part,
-    })
-  })
-  return paths
-})()
 ---
 
 <!doctype html>
@@ -85,27 +61,6 @@ const paths = (() => {
     {useViewTransitions && <ClientRouter />}
   </head>
   <body class={bodyClass}>
-    {
-      showPaths && (
-        <p
-          class={
-            'px-4 pt-2 pb-8 font-mono text-sm leading-5 break-all text-neutral-400 max-sm:px-2 max-sm:pb-4 max-sm:text-xs ' +
-            (hidePathsOnPrint ? 'print:hidden' : '')
-          }
-        >
-          {paths.map((path, index) => (
-            <>
-              {index > 0 && ' / '}
-              <a
-                href={path.pathname}
-                class="hover:text-white"
-              >{`${path.name}`}</a>
-            </>
-          ))}
-        </p>
-      )
-    }
-
     <slot />
   </body>
 </html>
