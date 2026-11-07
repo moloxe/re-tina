@@ -1,0 +1,4 @@
+async function e(e){let t=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:!1,noiseSuppression:!1,autoGainControl:!1}}),n=new window.AudioContext,r=n.createMediaStreamSource(t),i=n.createAnalyser();i.fftSize=e*2;let a=i.frequencyBinCount,o=new Uint8Array(a);r.connect(i);function s(){return i.getByteFrequencyData(o),o}return s}var t=async({bufferSize:t}={})=>{try{if(navigator.mediaDevices)return await e(t??256);let n=document.createElement(`div`);return n.innerHTML=`
+      <p style="color: #fff; font-size: 1.4rem;">
+        Click anywhere to enable microphone recording.
+      </p>`,document.body.appendChild(n),new Promise(r=>{document.addEventListener(`click`,async()=>{n.remove(),r(await e(t??256))},{once:!0})})}catch(e){throw console.error(`Error al acceder al micrófono:`,e),e}};export{t};

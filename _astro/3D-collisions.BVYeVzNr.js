@@ -1,0 +1,3 @@
+import{t as e}from"./_lib.D4YYebGq.js";var t=new e({showFps:!0});t.camera.pos.x=-.25,t.camera.spherical.theta=-.4,t.camera.fov=60;var n=.05,r=[,,,,,].fill(0).map(()=>t.registerMaterial({sdFunc:`return sdSphere(pos, ${n});`,enableCollisions:!0}));t.registerMaterial({pos:{x:0,y:-.3,z:-.5},sdFunc:`
+    return sdBox(pos, vec3f(0.01, 0.15, 0.1));
+  `});var i=0;async function a(){let e=performance.now()/1e3;for(let t=0;t<r.length;t++){let n=e/2+2*Math.PI*t/r.length,i=Math.cos(n)*.2,a=Math.sin(n)*.2+.02;r[t].setPos({x:i,y:a,z:-.5})}if(!(!t.isBuilt()||i>0))for(let e=0;e<r.length;e++){let t=r[e],a=t.getPos();i++;let o=await t.checkCollision(a),s={r:1,g:1,b:1};o.materialIndex!==-1&&o.collisionDist<=n&&(s={r:.3,g:.9,b:.3}),t.setColor(s),i--}}t.start({onFrame(){a()}});
