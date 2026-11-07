@@ -1,18 +1,18 @@
 // src/pages/_lib/utils/loadImage.ts
 async function e(e) {
-	let t = document.createElement("img");
-	t.src = e, await t.decode();
-	let n = document.createElement("canvas");
-	n.width = t.width, n.height = t.height;
-	let r = n.getContext("2d");
-	if (!r) throw Error("No canvas context found");
-	r.drawImage(t, 0, 0, n.width, n.height);
-	let i = r.getImageData(0, 0, n.width, n.height), a = new Uint8Array(t.width * t.height * 4);
-	for (let e = 0; e < t.width * t.height * 4; e++) a[e] = i.data[e];
+	let t = e.startsWith("/") && !e.startsWith("/re-tina") ? `/re-tina${e}` : e, n = document.createElement("img");
+	n.src = t, await n.decode();
+	let r = document.createElement("canvas");
+	r.width = n.width, r.height = n.height;
+	let i = r.getContext("2d");
+	if (!i) throw Error("No canvas context found");
+	i.drawImage(n, 0, 0, r.width, r.height);
+	let a = i.getImageData(0, 0, r.width, r.height), o = new Uint8Array(n.width * n.height * 4);
+	for (let e = 0; e < n.width * n.height * 4; e++) o[e] = a.data[e];
 	return {
-		textureData: a,
-		width: t.width,
-		height: t.height
+		textureData: o,
+		width: n.width,
+		height: n.height
 	};
 }
 // src/pages/_lib/utils/getFFTGetter.ts

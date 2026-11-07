@@ -1,4 +1,13 @@
-import{t as e}from"./_lib.D4YYebGq.js";async function t(e){let t=document.createElement(`img`);t.src=e,await t.decode();let n=document.createElement(`canvas`);n.width=t.width,n.height=t.height;let r=n.getContext(`2d`);if(!r)throw Error(`No canvas context found`);r.drawImage(t,0,0,n.width,n.height);let i=r.getImageData(0,0,n.width,n.height),a=new Uint8Array(t.width*t.height*4);for(let e=0;e<t.width*t.height*4;e++)a[e]=i.data[e];return{textureData:a,width:t.width,height:t.height}}var n=await t(`/re-tina/img/tina.jpeg`),r=new e({fps:24,height:128,texs:[{width:n.width,height:n.height}],usePrevFrameTex:!0,functions:`
+var e=`import ReTina, { loadImage } from '@ReTina'
+
+const img = await loadImage('/img/tina.jpeg')
+
+const rt = new ReTina({
+  fps: 24,
+  height: 128,
+  texs: [{ width: img.width, height: img.height }],
+  usePrevFrameTex: true,
+  functions: /* wgsl */ \`
     fn isPixAlive(pos: vec2f) -> vec3f {
       return step(vec3f(0.5), getPrevFrameTexSample(pos).rgb);
     }
@@ -14,7 +23,8 @@ import{t as e}from"./_lib.D4YYebGq.js";async function t(e){let t=document.create
       }
       return 0f;
     }
-  `,main:`
+  \`,
+  main: /* wgsl */ \`
     if (U.time < 1) {
       return getTex0Sample(uv);
     } else {
@@ -37,4 +47,12 @@ import{t as e}from"./_lib.D4YYebGq.js";async function t(e){let t=document.create
       );
       return vec4f(newState, 1);
     }
-  `});r.start({onBuild(){r.setTex(0,n.textureData)}});
+  \`,
+})
+
+rt.start({
+  onBuild() {
+    rt.setTex(0, img.textureData)
+  },
+})
+`;export{e as default};
