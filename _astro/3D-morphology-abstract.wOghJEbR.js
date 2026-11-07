@@ -1,6 +1,8 @@
 var e=`import ReTina from '@ReTina'
 
 const rt = new ReTina({
+  useInterlacing: true,
+  height: 600,
   functions: /* wgsl */ \`
     fn sdD1(pos: vec3f, t: f32) -> f32 {
       return (pos.y - (
