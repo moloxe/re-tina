@@ -10,7 +10,7 @@ const RightPanel = ({ example, code, sketch }: Props) => {
   const routeUrl = `${import.meta.env.DEV ? '' : '/re-tina'}/${example.route}`
 
   return (
-    <div className="flex flex-2 flex-col gap-6">
+    <div className="flex min-w-0 flex-1 flex-col gap-6 overflow-hidden">
       <iframe src={routeUrl} height="400" width="100%" />
       <a
         href={routeUrl}
@@ -19,7 +19,7 @@ const RightPanel = ({ example, code, sketch }: Props) => {
       >
         {example.route}
       </a>
-      <pre className="relative bg-[#282c34]">
+      <pre className="relative overflow-x-auto rounded bg-[#282c34]">
         <button
           className="absolute top-2 right-2 rounded border bg-[#282c34] px-2 text-sm"
           onClick={(ev) => {
@@ -34,7 +34,7 @@ const RightPanel = ({ example, code, sketch }: Props) => {
           Copy
         </button>
         <code
-          className="hljs language-javascript overflow-x-auto text-xs whitespace-pre"
+          className="hljs language-javascript text-xs whitespace-pre"
           dangerouslySetInnerHTML={{
             __html: sketch,
           }}

@@ -1,7 +1,6 @@
 import ReTina, { loadImage } from '@ReTina'
 
-const imgUrl = import.meta.env.DEV ? '/img/tina.jpeg' : '/re-tina/img/tina.jpeg'
-const img = await loadImage(imgUrl)
+const img = await loadImage('/img/tina.jpeg')
 
 const rt = new ReTina({
   fps: 24,

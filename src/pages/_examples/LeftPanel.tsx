@@ -11,7 +11,7 @@ const LeftPanel = ({ examples, currentExample, setCurrentExample }: Props) => {
   const editorUrl = `${import.meta.env.DEV ? '' : '/re-tina'}/editor`
 
   return (
-    <div className="flex flex-1 flex-col gap-6">
+    <div className="flex w-full flex-col gap-6 md:w-64 md:shrink-0">
       <div class="flex flex-col">
         <img
           src={ReTinaImg.src}

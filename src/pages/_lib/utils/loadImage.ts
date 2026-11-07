@@ -1,6 +1,11 @@
 async function loadImage(iurl: string) {
+  const isProd = !import.meta.env.DEV
+  const url =
+    isProd && iurl.startsWith('/') && !iurl.startsWith('/re-tina')
+      ? `/re-tina${iurl}`
+      : iurl
   const img = document.createElement('img')
-  img.src = iurl
+  img.src = url
   await img.decode()
 
   const imageCanvas = document.createElement('canvas')
