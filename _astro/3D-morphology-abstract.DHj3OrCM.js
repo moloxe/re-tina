@@ -1,4 +1,4 @@
-import{t as e}from"./_lib.D4YYebGq.js";var t=new e({height:Math.min(800,window.innerHeight*window.devicePixelRatio*1.2),functions:`
+import{t as e}from"./_lib.D4YYebGq.js";var t=new e({functions:`
     fn sdD1(pos: vec3f, t: f32) -> f32 {
       return (pos.y - (
         snoise3d(vec3f(pos.xz * 0.1, t * 2f)) +
