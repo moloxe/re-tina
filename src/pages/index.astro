@@ -1,0 +1,31 @@
+---
+import ReTinaExamples from '@src/pages/_examples/ReTinaExamples'
+import Layout from '@Layout'
+import { loadExamples } from './_utils/loadExamples'
+
+export const prerender = true
+const examples = await loadExamples()
+---
+
+<Layout title="ReTina" lang="en" showPaths>
+  <ReTinaExamples client:only="preact" examples={examples} />
+</Layout>
+
+<footer class="mx-auto mt-auto flex max-w-2xl justify-between p-2 py-16">
+  <p>
+    {'© 2025. All content and pages are licensed under '}
+    <a
+      target="_blank"
+      href="https://creativecommons.org/licenses/by-sa/4.0/"
+      class="hover:text-white">CC BY-SA 4.0</a
+    >
+  </p>
+</footer>
+
+<style is:inline>
+  body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+</style>

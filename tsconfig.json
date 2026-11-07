@@ -1,0 +1,15 @@
+{
+  "extends": "astro/tsconfigs/strict",
+  "include": [".astro/types.d.ts", "**/*"],
+  "exclude": ["dist"],
+  "compilerOptions": {
+    "paths": {
+      "@src/*": ["./src/*"],
+      "@ReTina": ["./src/pages/_lib/"],
+      "@Layout": ["./src/layouts/Layout.astro"]
+    },
+    "jsx": "react-jsx",
+    "jsxImportSource": "preact",
+    "types": ["node", "@webgpu/types"]
+  }
+}

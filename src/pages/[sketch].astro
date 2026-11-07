@@ -1,0 +1,46 @@
+---
+const { sketch } = Astro.params
+
+export const prerender = true
+
+export async function getStaticPaths() {
+  const files = import.meta.glob('./_sketches/*.ts')
+  const paths = Object.keys(files).map((path) => {
+    const sketch = path.split('/').pop()?.replace('.ts', '') ?? ''
+    return {
+      params: { sketch },
+    }
+  })
+  return paths
+}
+---
+
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="generator" content={Astro.generator} />
+    <meta name="robots" content="noindex, nofollow" />
+    <meta name="rt-sketch" content={sketch} />
+    <title>{sketch}</title>
+    <script>
+      const fileName = document
+        .querySelector('meta[name="rt-sketch"]')
+        ?.getAttribute('content')
+      const modules = import.meta.glob('./_sketches/*.ts')
+      modules[`./_sketches/${fileName}.ts`]()
+    </script>
+  </head>
+  <body> </body>
+</html>
+
+<style is:global>
+  html {
+    overflow: hidden;
+    background-color: black;
+  }
+  canvas {
+    margin: auto;
+  }
+</style>

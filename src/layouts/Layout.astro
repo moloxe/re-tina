@@ -1,0 +1,111 @@
+---
+import '@src/assets/styles/global.css'
+import { ClientRouter } from 'astro:transitions'
+
+type Props = {
+  htmlClass?: string
+  lang?: string
+  scripts?: string[]
+  title?: string
+  allowIndexing?: boolean
+  seoDescription?: string
+  seoImg?: string
+  showPaths?: boolean
+  hidePathsOnPrint?: boolean
+  useViewTransitions?: boolean
+  bodyClass?: string
+}
+
+const {
+  htmlClass,
+  showPaths,
+  seoDescription,
+  seoImg,
+  hidePathsOnPrint,
+  useViewTransitions,
+  bodyClass,
+} = Astro.props
+
+const lang = Astro.props.lang || 'en'
+const title = Astro.props.title || 'ReTina'
+const scripts = Astro.props.scripts || []
+const allowIndexing = Astro.props.allowIndexing ?? true
+
+const basePrefix = import.meta.env.DEV ? '' : '/re-tina'
+const pathname = Astro.url.pathname.replace(/^\/re-tina/, '') || '/'
+
+const paths = (() => {
+  const paths: { pathname: string; name: string }[] = []
+  const parts = pathname.split('/').filter(Boolean)
+  paths.push({ pathname: `${basePrefix}/`, name: 'Home' })
+  let accumulated = ''
+  parts.forEach((part) => {
+    accumulated += `/${part}`
+    paths.push({
+      pathname: `${basePrefix}${accumulated}`,
+      name: part,
+    })
+  })
+  return paths
+})()
+---
+
+<!doctype html>
+<html lang={lang} class={htmlClass}>
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"
+    />
+    <meta property="og:title" content={title} />
+    <meta name="twitter:title" content={title} />
+    {
+      seoDescription && (
+        <>
+          <meta name="description" content={seoDescription} />
+          <meta property="og:description" content={seoDescription} />
+          <meta name="twitter:description" content={seoDescription} />
+        </>
+      )
+    }
+    {
+      seoImg && (
+        <>
+          <meta property="og:image" content={seoImg} />
+          <meta name="twitter:image" content={seoImg} />
+        </>
+      )
+    }
+    <meta name="generator" content={Astro.generator} />
+    {!allowIndexing && <meta name="robots" content="noindex, nofollow" />}
+    <title>{title}</title>
+    <link rel="icon" type="image/svg+xml" href={`${basePrefix}/favicon.svg`} />
+    {scripts.map((src) => <script src={src} />)}
+    {useViewTransitions && <ClientRouter />}
+  </head>
+  <body class={bodyClass}>
+    {
+      showPaths && (
+        <p
+          class={
+            'px-4 pt-2 pb-8 font-mono text-sm leading-5 break-all text-neutral-400 max-sm:px-2 max-sm:pb-4 max-sm:text-xs ' +
+            (hidePathsOnPrint ? 'print:hidden' : '')
+          }
+        >
+          {paths.map((path, index) => (
+            <>
+              {index > 0 && ' / '}
+              <a
+                href={path.pathname}
+                class="hover:text-white"
+              >{`${path.name}`}</a>
+            </>
+          ))}
+        </p>
+      )
+    }
+
+    <slot />
+  </body>
+</html>

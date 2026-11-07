@@ -1,0 +1,12 @@
+---
+import Layout from '@Layout'
+import RTFrame from './_components/RTFrame'
+import RTEditor from './_components/RTEditor'
+---
+
+<Layout title="ReTina Editor - BETA">
+  <div class="flex h-screen flex-row">
+    <RTEditor client:only="preact" />
+    <RTFrame client:only="preact" />
+  </div>
+</Layout>
