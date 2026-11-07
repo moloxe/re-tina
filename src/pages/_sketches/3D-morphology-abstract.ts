@@ -1,7 +1,6 @@
 import ReTina from '@ReTina'
 
 const rt = new ReTina({
-  height: Math.min(800, window.innerHeight * window.devicePixelRatio * 1.2),
   functions: /* wgsl */ `
     fn sdD1(pos: vec3f, t: f32) -> f32 {
       return (pos.y - (
