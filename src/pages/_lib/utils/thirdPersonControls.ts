@@ -100,9 +100,12 @@ export function thirdPersonControls(
 
     const penetration = skin - collisionDist
     const correctedY = oldCam.y + n.y * penetration
+    const vel = controls.getVelocity()
 
     if (isFloor) {
-      rt.camera.pos.y = Math.max(rt.camera.pos.y, correctedY)
+      if (vel.y <= 0) {
+        rt.camera.pos.y = Math.max(rt.camera.pos.y, correctedY)
+      }
     } else if (isCeiling) {
       rt.camera.pos.y = Math.min(rt.camera.pos.y, correctedY)
     } else {
@@ -112,13 +115,13 @@ export function thirdPersonControls(
     rt.camera.pos.x += n.x * penetration
     rt.camera.pos.z += n.z * penetration
 
-    const vel = controls.getVelocity()
-
     if (isFloor) {
       // ── Floor ──
-      onGround = true
-      player.setColor({ r: 0, g: 1, b: 0 })
-      if (vel.y < 0) controls.setVelocity({ y: 0 })
+      if (vel.y <= 0) {
+        onGround = true
+        player.setColor({ r: 0, g: 1, b: 0 })
+        controls.setVelocity({ y: 0 })
+      }
     } else if (isCeiling) {
       // ── Ceiling ──
       onGround = false
@@ -138,11 +141,13 @@ export function thirdPersonControls(
     }
   }
 
-  function update() {
+  function update(dt = 1 / 60) {
+    const dtScale = dt * 60
     const cam = rt.camera.pos
+    const prevVy = controls.getVelocity().y
 
     if (!onGround) {
-      controls.applyForce({ y: -GRAVITY })
+      controls.applyForce({ y: -GRAVITY * dtScale })
       const vel = controls.getVelocity()
       if (vel.y < TERMINAL_VEL) controls.setVelocity({ y: TERMINAL_VEL })
     } else {
@@ -150,7 +155,8 @@ export function thirdPersonControls(
       if (vel.y < 0) controls.setVelocity({ y: 0 })
     }
 
-    cam.y += controls.getVelocity().y
+    const nextVy = controls.getVelocity().y
+    cam.y += (prevVy + nextVy) * 0.5 * dtScale
 
     if (options?.respawnY !== undefined && cam.y < options.respawnY) {
       rt.camera.pos = { ...initPos }

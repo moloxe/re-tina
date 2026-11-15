@@ -73,45 +73,70 @@ function freeControls(rt: ReTina, options: FreeControlsOptions) {
   const vel = [0, 0, 0]
   const acc = options?.speed ?? 0.002
 
-  keyboardListener((move) => {
+  const update = keyboardListener((move, dt) => {
+    // Normalize dt to 60 FPS reference so existing speed/slowDown values keep their exact feel
+    const dtScale = dt * 60
     const yAngle = rt.camera.spherical.theta
 
+    let ax = 0
+    let ay = 0
+    let az = 0
+
     if (move.UP && !options?.blockY) {
-      vel[1] += acc
+      ay += acc
     }
     if (move.DOWN && !options?.blockY) {
-      vel[1] -= acc
+      ay -= acc
     }
     if (move.FRONT) {
-      vel[0] -= acc * Math.sin(yAngle)
-      vel[2] -= acc * Math.cos(yAngle)
+      ax -= acc * Math.sin(yAngle)
+      az -= acc * Math.cos(yAngle)
     }
     if (move.BACK) {
-      vel[0] += acc * Math.sin(yAngle)
-      vel[2] += acc * Math.cos(yAngle)
+      ax += acc * Math.sin(yAngle)
+      az += acc * Math.cos(yAngle)
     }
     if (move.LEFT) {
-      vel[0] -= acc * Math.cos(yAngle)
-      vel[2] += acc * Math.sin(yAngle)
+      ax -= acc * Math.cos(yAngle)
+      az += acc * Math.sin(yAngle)
     }
     if (move.RIGHT) {
-      vel[0] += acc * Math.cos(yAngle)
-      vel[2] -= acc * Math.sin(yAngle)
+      ax += acc * Math.cos(yAngle)
+      az -= acc * Math.sin(yAngle)
     }
     if (move.SPACE) {
       options?.onSpace?.()
     }
 
-    rt.camera.pos.x += vel[0]
-    if (!options?.blockY) rt.camera.pos.y += vel[1]
-    rt.camera.pos.z += vel[2]
+    const dampX = options?.slowDown?.x ?? 0.9
+    const dampY = options?.slowDown?.y ?? 0.9
+    const dampZ = options?.slowDown?.z ?? 0.9
 
-    vel[0] *= options?.slowDown?.x ?? 0.9
-    if (!options?.blockY) vel[1] *= options?.slowDown?.y ?? 0.9
-    vel[2] *= options?.slowDown?.z ?? 0.9
+    const stepVel = (v: number, a: number, s: number) => {
+      if (s >= 1) return v + a * dtScale
+      const sPow = Math.pow(s, dtScale)
+      return v * sPow + (a * s * (1 - sPow)) / (1 - s)
+    }
+
+    const nextVx = stepVel(vel[0], ax, dampX)
+    const nextVy = options?.blockY ? vel[1] : stepVel(vel[1], ay, dampY)
+    const nextVz = stepVel(vel[2], az, dampZ)
+
+    const dampFactorX = dampX < 1 ? dampX : 1
+    const dampFactorY = dampY < 1 ? dampY : 1
+    const dampFactorZ = dampZ < 1 ? dampZ : 1
+
+    rt.camera.pos.x += (nextVx / dampFactorX) * dtScale
+    if (!options?.blockY) rt.camera.pos.y += (nextVy / dampFactorY) * dtScale
+    rt.camera.pos.z += (nextVz / dampFactorZ) * dtScale
+
+    vel[0] = nextVx
+    if (!options?.blockY) vel[1] = nextVy
+    vel[2] = nextVz
   })
 
   return {
+    update,
     applyForce(force: { x?: number; y?: number; z?: number }) {
       vel[0] += force.x ?? 0
       vel[1] += force.y ?? 0

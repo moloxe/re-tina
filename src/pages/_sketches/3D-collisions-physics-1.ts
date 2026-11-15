@@ -2,8 +2,8 @@ import ReTina from '@ReTina'
 
 const rt = new ReTina({
   showFps: true,
-  height: 400,
-  fps: 30,
+  height: 360,
+  fps: 60,
   useInterlacing: true,
   main: /* wgsl */ `
     let scene = calcScene(uv);
@@ -96,8 +96,6 @@ async function updateSpheres() {
 rt.setControlsTo3rdPerson({
   initPos: { x: 0, y: 2, z: 4 },
   respawnY: -10,
-  gravity: 0.02,
-  jumpForce: 0.3,
 })
 
 rt.start({

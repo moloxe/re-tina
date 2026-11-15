@@ -65,7 +65,7 @@ class ReTina {
   private raymarch?: RTRaymarchOptions
   private device?: GPUDevice
   private presentationFormat?: GPUTextureFormat
-  private frameCallbacks: (() => void)[] = []
+  private frameCallbacks: ((dt: number) => void)[] = []
 
   camera: RTCamera = {
     pos: { x: 0, y: 0, z: 0 },
@@ -168,6 +168,7 @@ class ReTina {
       camSphericalT: this.camera.spherical.theta ?? 0,
       camSphericalP: this.camera.spherical.phi ?? 0,
       camFov: this.camera.fov ?? 90,
+      deltaTime: 1 / 60,
       ...this.initalCustomUniforms,
     })
 
@@ -326,7 +327,7 @@ class ReTina {
 
   async start(props?: {
     onBuild?: () => void
-    onFrame?: () => void
+    onFrame?: (dt: number) => void
     once?: boolean
   }) {
     await this.build()
@@ -340,11 +341,11 @@ class ReTina {
     }
 
     const rtLoop = new RTLoop({
-      cb: () => {
+      cb: (dt) => {
         for (const callback of this.frameCallbacks) {
-          callback()
+          callback(dt)
         }
-        props?.onFrame?.()
+        props?.onFrame?.(dt)
       },
       shoot: () => {
         this.render?.({
@@ -399,7 +400,9 @@ class ReTina {
   }
 
   setControlsToFree(options?: FreeControlsOptions) {
-    return freeControls(this, options)
+    const controls = freeControls(this, options)
+    this.frameCallbacks.push(controls.update)
+    return controls
   }
 
   setControlsTo3rdPerson(options?: ThirdPersonControlsOptions) {

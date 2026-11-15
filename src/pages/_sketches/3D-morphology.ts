@@ -1,6 +1,8 @@
 import ReTina from '@ReTina'
 
-const rt = new ReTina()
+const rt = new ReTina({
+  height: window.innerHeight * window.devicePixelRatio,
+})
 
 rt.registerMaterial({
   color: { r: 0, g: 0.9, b: 0.8 },
@@ -15,8 +17,8 @@ rt.registerMaterial({
 rt.camera.fov = 100
 rt.camera.spherical.radius = 2
 rt.start({
-  onFrame() {
-    rt.camera.spherical.phi += 0.006
-    rt.camera.spherical.theta += 0.006
+  onFrame(dt) {
+    rt.camera.spherical.phi += 0.36 * dt
+    rt.camera.spherical.theta += 0.36 * dt
   },
 })

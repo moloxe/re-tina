@@ -20,13 +20,13 @@ const rt = new ReTina({
       color = mix(color, vec3f(0.25) + pow(v, 16.0), v);
     }
 
-    color = round(color * 16.0) / 16.0;
+    color = round(color * 24f) / 24f;
     return vec4f(color, 1.0);
   `,
   functions: /* wgsl */ `
     const lightColor = vec3f(1.0, 0.8, 0.6);
     const lightPower1 = 3e5;
-    const lightPower2 = 1e5;
+    const lightPower2 = 6e4;
     const lightPos1 = vec3f(200.0, 200.0, 400.0);
     const lightPos2 = -lightPos1;
   `,
@@ -67,12 +67,12 @@ rt.registerMaterial({
   `,
 })
 
-rt.camera.fov = 120
+rt.camera.fov = 90
 rt.camera.pos.y = 2
-rt.camera.spherical = { radius: 3, theta: -2, phi: 0 }
+rt.camera.spherical = { radius: 4, theta: -2, phi: 0 }
 
 rt.start({
-  onFrame() {
-    rt.camera.spherical.theta += 0.001
+  onFrame(dt) {
+    rt.camera.spherical.theta += 0.2 * dt
   },
 })

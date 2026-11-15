@@ -1,6 +1,8 @@
 import ReTina from '@ReTina'
 
 const rt = new ReTina({
+  showFps: true,
+  height: window.innerHeight * window.devicePixelRatio,
   functions: /* wgsl */ `
     const nPoints = 8;
     const power = 2f;
@@ -26,7 +28,7 @@ const rt = new ReTina({
       }
     }
     let hue = f32(minIndex) / nPoints;
-    let bri = 1f - log(minD) / 8f;
+    let bri = 1.2f - log(minD) / 6f;
     var color = hsv2rgb(vec3f(hue, .4, bri));
     let bg = hsv2rgb(vec3(.6, .3, .08));
     color = mix(bg, color, bri);
@@ -54,8 +56,9 @@ rt.start({
       onMove(touch.clientX, touch.clientY)
     })
   },
-  onFrame() {
+  onFrame(dt) {
     const currentMoved = moved.get()
-    moved.set(currentMoved + (targetMoved - currentMoved) * 0.01)
+    const alpha = 1 - Math.pow(1 - 0.01, dt * 60)
+    moved.set(currentMoved + (targetMoved - currentMoved) * alpha)
   },
 })

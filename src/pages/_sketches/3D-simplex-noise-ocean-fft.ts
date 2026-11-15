@@ -135,9 +135,15 @@ rt.camera.pos.y = 8
 rt.camera.spherical = { radius: 3, theta: 0, phi: -0.1 }
 
 rt.start({
-  onFrame() {
+  onFrame(dt) {
     const fftBuffer = getFFT()
     if (!fftBuffer) return
+
+    const dtScale = dt * 60
+    const floorDropAlpha = 1 - Math.pow(0.92, dtScale)
+    const floorRiseAlpha = 1 - Math.pow(0.999, dtScale)
+    const attackAlpha = 1 - Math.pow(1 - 0.45, dtScale)
+    const decayAlpha = 1 - Math.pow(1 - 0.11, dtScale)
 
     for (let i = 0; i <= nBars; i++) {
       const [b0, b1] = binRanges[i]
@@ -154,9 +160,9 @@ rt.start({
 
       // Seguimiento adaptativo del piso de ruido en reposo
       if (raw < noiseFloor[i]) {
-        noiseFloor[i] = noiseFloor[i] * 0.92 + raw * 0.08
+        noiseFloor[i] += (raw - noiseFloor[i]) * floorDropAlpha
       } else {
-        noiseFloor[i] = noiseFloor[i] * 0.999 + raw * 0.001
+        noiseFloor[i] += (raw - noiseFloor[i]) * floorRiseAlpha
       }
 
       // Noise gate con umbral dinámico por encima del piso de ruido
@@ -173,9 +179,9 @@ rt.start({
 
       // Balística de audio profesional: Attack instantáneo y Decay suave
       if (target > smoothedValues[i]) {
-        smoothedValues[i] += (target - smoothedValues[i]) * 0.45
+        smoothedValues[i] += (target - smoothedValues[i]) * attackAlpha
       } else {
-        smoothedValues[i] += (target - smoothedValues[i]) * 0.11
+        smoothedValues[i] += (target - smoothedValues[i]) * decayAlpha
       }
 
       // En reposo absoluto apagar completamente (cero movimiento residual)
