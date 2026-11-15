@@ -3,7 +3,7 @@ import ReTina, { loadImage } from '@ReTina'
 const img = await loadImage('/img/tina.jpeg')
 
 const rt = new ReTina({
-  fps: 24,
+  fps: 20,
   height: 128,
   texs: [{ width: img.width, height: img.height }],
   usePrevFrameTex: true,
