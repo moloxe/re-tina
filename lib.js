@@ -453,26 +453,26 @@ async function h({ device: e, presentationFormat: t, context: n, canvas: i, main
 			frontFace: "ccw",
 			stripIndexFormat: "uint32"
 		}
-	}), w = 0, T = null;
-	function E(e) {
+	}), w = 0, T = null, E = null;
+	function D(e) {
 		let t = performance.now() / 1e3;
-		T === null && (T = performance.now() / 1e3);
-		let n = t - T;
-		c.set("frame", w), c.set("time", n), c.set("aspectRatio", i.width / i.height), c.set("width", i.width), c.set("height", i.height), c.set("camPosX", e.pos.x), c.set("camPosY", e.pos.y), c.set("camPosZ", e.pos.z), c.set("camSphericalR", e.spherical.radius), c.set("camSphericalT", e.spherical.theta), c.set("camSphericalP", e.spherical.phi), c.set("camFov", e.fov);
+		T === null && (T = t);
+		let n = t - T, r = E === null ? 1 / 60 : Math.min(Math.max(t - E, 0), .1);
+		E = t, c.set("frame", w), c.set("time", n), c.set("deltaTime", r), c.set("aspectRatio", i.width / i.height), c.set("width", i.width), c.set("height", i.height), c.set("camPosX", e.pos.x), c.set("camPosY", e.pos.y), c.set("camPosZ", e.pos.z), c.set("camSphericalR", e.spherical.radius), c.set("camSphericalT", e.spherical.theta), c.set("camSphericalP", e.spherical.phi), c.set("camFov", e.fov);
 	}
-	let D = l.getTextureEntries();
+	let O = l.getTextureEntries();
 	u && u.getBufferEntries().forEach((e, t) => {
-		D.push({
+		O.push({
 			binding: t + l.length(),
 			resource: e.resource
 		});
 	});
-	let O = e.createBindGroup({
+	let k = e.createBindGroup({
 		layout: C.getBindGroupLayout(1),
-		entries: D
+		entries: O
 	});
-	function k({ camera: t }) {
-		E(t);
+	function A({ camera: t }) {
+		D(t);
 		let r = e.createCommandEncoder();
 		y && y.encodePass(r);
 		let i = { colorAttachments: [{
@@ -486,9 +486,9 @@ async function h({ device: e, presentationFormat: t, context: n, canvas: i, main
 			},
 			storeOp: "store"
 		}] }, a = r.beginRenderPass(i);
-		a.setPipeline(C), a.setBindGroup(0, c.uniformBindGroup), a.setBindGroup(1, O), g && h !== void 0 && a.setBindGroup(h, g.currentBindGroupIn), y && b !== void 0 && a.setBindGroup(b, y.distMapReadBindGroup), a.draw(4, 1, 0, 0), a.end(), _ && _.encodeResolvePass(r, v), g && r.copyTextureToTexture({ texture: g.currentWriteTexture }, { texture: n.getCurrentTexture() }, g.offscreenTextureSize), e.queue.submit([r.finish()]), g && g.swap(), w++;
+		a.setPipeline(C), a.setBindGroup(0, c.uniformBindGroup), a.setBindGroup(1, k), g && h !== void 0 && a.setBindGroup(h, g.currentBindGroupIn), y && b !== void 0 && a.setBindGroup(b, y.distMapReadBindGroup), a.draw(4, 1, 0, 0), a.end(), _ && _.encodeResolvePass(r, v), g && r.copyTextureToTexture({ texture: g.currentWriteTexture }, { texture: n.getCurrentTexture() }, g.offscreenTextureSize), e.queue.submit([r.finish()]), g && g.swap(), w++;
 	}
-	return k;
+	return A;
 }
 // src/pages/_lib/ReTina/device/get-device.ts
 async function g() {
@@ -892,31 +892,39 @@ var x = class {
 	fpsCounter = 0;
 	showFps;
 	cb;
+	rafId = null;
 	constructor({ cb: e, shoot: t, fps: n, showFps: r }) {
 		this.shoot = t, this.cb = e, this.fps = n, this.showFps = r;
 	}
-	startFpsCounter() {
+	createFpsCounterElement() {
 		let e = document.createElement("div");
-		e.setAttribute("style", " position: absolute;\n        top: 0;\n        left: 0;\n        color: green;\n        background: black;\n        font-size: 16px;\n        font-family: monospace;\n        pointer-events: none;"), document.body.appendChild(e), setInterval(() => {
-			e.innerText = `FPS: ${this.fpsCounter}`, this.fpsCounter = 0;
-		}, 1e3);
+		return e.setAttribute("style", " position: absolute;\n        top: 0;\n        left: 0;\n        color: green;\n        background: black;\n        font-size: 16px;\n        font-family: monospace;\n        pointer-events: none;"), e.innerText = "FPS: --", document.body.appendChild(e), e;
 	}
 	start() {
-		this.showFps && this.startFpsCounter();
-		let e = this.cb, t = this.shoot, n = () => {
-			this.fpsCounter++;
-		}, r = this.fps, i = async () => {
-			requestAnimationFrame(i), await e(), t(), n();
+		let e = this.showFps ? this.createFpsCounterElement() : null, t = this.cb, n = this.shoot, r = this.fps, i = r === void 0 ? 0 : 1e3 / r, a = null, o = null, s = null, c = (t) => {
+			if (!e) return;
+			if (this.fpsCounter++, s === null) {
+				s = t;
+				return;
+			}
+			let n = t - s;
+			n >= 500 && (e.innerText = `FPS: ${Math.round(this.fpsCounter * 1e3 / n)}`, this.fpsCounter = 0, s = t);
+		}, l = async (e) => {
+			if (r !== void 0 && a !== null) {
+				let t = e - a;
+				if (t < i - .5) {
+					this.rafId = requestAnimationFrame(l);
+					return;
+				}
+				a = e - t % i;
+			} else a = e;
+			let s = o === null ? 1 / (r ?? 60) : (e - o) / 1e3;
+			o = e, await t(Math.min(Math.max(s, 0), .1)), n(), c(e), this.rafId = requestAnimationFrame(l);
 		};
-		if (r !== void 0) {
-			let a = 1e3 / r, o = 0;
-			i = async (r) => {
-				requestAnimationFrame(i);
-				let s = r - o;
-				s > a && (o = r - s % a, await e(), t(), n());
-			};
-		}
-		requestAnimationFrame(i);
+		this.rafId = requestAnimationFrame(l);
+	}
+	stop() {
+		this.rafId !== null && (cancelAnimationFrame(this.rafId), this.rafId = null);
 	}
 };
 // src/pages/_lib/ReTina/utils/utils.ts
@@ -1255,12 +1263,13 @@ var O = class {
 // src/pages/_lib/utils/keyboardListener.ts
 function A(e) {
 	let t = {};
-	window.addEventListener("keydown", (e) => {
+	return window.addEventListener("keydown", (e) => {
 		e.preventDefault(), t[e.code] = !0;
 	}), window.addEventListener("keyup", (e) => {
 		e.preventDefault(), t[e.code] = !1;
-	});
-	function n() {
+	}), window.addEventListener("blur", () => {
+		for (let e in t) t[e] = !1;
+	}), function(n = 1 / 60) {
 		e({
 			UP: t.KeyE,
 			DOWN: t.KeyQ,
@@ -1269,9 +1278,8 @@ function A(e) {
 			LEFT: t.KeyA,
 			RIGHT: t.KeyD,
 			SPACE: t.Space
-		}), requestAnimationFrame(n);
-	}
-	n();
+		}, n);
+	};
 }
 // src/pages/_lib/utils/freeControls.ts
 function j(e, t) {
@@ -1320,10 +1328,17 @@ function j(e, t) {
 		0,
 		0
 	], l = t?.speed ?? .002;
-	return A((n) => {
-		let r = e.camera.spherical.theta;
-		n.UP && !t?.blockY && (c[1] += l), n.DOWN && !t?.blockY && (c[1] -= l), n.FRONT && (c[0] -= l * Math.sin(r), c[2] -= l * Math.cos(r)), n.BACK && (c[0] += l * Math.sin(r), c[2] += l * Math.cos(r)), n.LEFT && (c[0] -= l * Math.cos(r), c[2] += l * Math.sin(r)), n.RIGHT && (c[0] += l * Math.cos(r), c[2] -= l * Math.sin(r)), n.SPACE && t?.onSpace?.(), e.camera.pos.x += c[0], t?.blockY || (e.camera.pos.y += c[1]), e.camera.pos.z += c[2], c[0] *= t?.slowDown?.x ?? .9, t?.blockY || (c[1] *= t?.slowDown?.y ?? .9), c[2] *= t?.slowDown?.z ?? .9;
-	}), {
+	return {
+		update: A((n, r) => {
+			let i = r * 60, a = e.camera.spherical.theta, o = 0, s = 0, u = 0;
+			n.UP && !t?.blockY && (s += l), n.DOWN && !t?.blockY && (s -= l), n.FRONT && (o -= l * Math.sin(a), u -= l * Math.cos(a)), n.BACK && (o += l * Math.sin(a), u += l * Math.cos(a)), n.LEFT && (o -= l * Math.cos(a), u += l * Math.sin(a)), n.RIGHT && (o += l * Math.cos(a), u -= l * Math.sin(a)), n.SPACE && t?.onSpace?.();
+			let d = t?.slowDown?.x ?? .9, f = t?.slowDown?.y ?? .9, p = t?.slowDown?.z ?? .9, m = (e, t, n) => {
+				if (n >= 1) return e + t * i;
+				let r = n ** +i;
+				return e * r + t * n * (1 - r) / (1 - n);
+			}, h = m(c[0], o, d), g = t?.blockY ? c[1] : m(c[1], s, f), _ = m(c[2], u, p), v = d < 1 ? d : 1, y = f < 1 ? f : 1, b = p < 1 ? p : 1;
+			e.camera.pos.x += h / v * i, t?.blockY || (e.camera.pos.y += g / y * i), e.camera.pos.z += _ / b * i, c[0] = h, t?.blockY || (c[1] = g), c[2] = _;
+		}),
 		applyForce(e) {
 			c[0] += e.x ?? 0, c[1] += e.y ?? 0, c[2] += e.z ?? 0;
 		},
@@ -1371,14 +1386,12 @@ function M(e, t) {
 			f && a > s * 1.5 && (d = !1);
 			return;
 		}
-		let g = h - a, _ = n.y + o.y * g;
-		f ? e.camera.pos.y = Math.max(e.camera.pos.y, _) : m ? e.camera.pos.y = Math.min(e.camera.pos.y, _) : e.camera.pos.y += o.y * g, e.camera.pos.x += o.x * g, e.camera.pos.z += o.z * g;
-		let v = p.getVelocity();
-		if (f) d = !0, r.setColor({
+		let g = h - a, _ = n.y + o.y * g, v = p.getVelocity();
+		if (f ? v.y <= 0 && (e.camera.pos.y = Math.max(e.camera.pos.y, _)) : m ? e.camera.pos.y = Math.min(e.camera.pos.y, _) : e.camera.pos.y += o.y * g, e.camera.pos.x += o.x * g, e.camera.pos.z += o.z * g, f) v.y <= 0 && (d = !0, r.setColor({
 			r: 0,
 			g: 1,
 			b: 0
-		}), v.y < 0 && p.setVelocity({ y: 0 });
+		}), p.setVelocity({ y: 0 }));
 		else if (m) d = !1, r.setColor({
 			r: 1,
 			g: 0,
@@ -1398,9 +1411,11 @@ function M(e, t) {
 			});
 		}
 	}
-	function h() {
-		let a = e.camera.pos;
-		if (d ? p.getVelocity().y < 0 && p.setVelocity({ y: 0 }) : (p.applyForce({ y: -i }), p.getVelocity().y < o && p.setVelocity({ y: o })), a.y += p.getVelocity().y, t?.respawnY !== void 0 && a.y < t.respawnY) {
+	function h(a = 1 / 60) {
+		let s = a * 60, l = e.camera.pos, u = p.getVelocity().y;
+		d ? p.getVelocity().y < 0 && p.setVelocity({ y: 0 }) : (p.applyForce({ y: -i * s }), p.getVelocity().y < o && p.setVelocity({ y: o }));
+		let h = p.getVelocity().y;
+		if (l.y += (u + h) * .5 * s, t?.respawnY !== void 0 && l.y < t.respawnY) {
 			e.camera.pos = { ...n }, p.setVelocity({
 				x: 0,
 				y: 0,
@@ -1409,26 +1424,26 @@ function M(e, t) {
 			return;
 		}
 		if (f) return;
-		let s = {
-			x: a.x,
-			y: a.y,
-			z: a.z
-		}, l = {
-			x: a.x,
-			y: a.y - 1,
-			z: a.z
-		}, u = {
-			x: a.x,
-			y: a.y + .1,
-			z: a.z
+		let g = {
+			x: l.x,
+			y: l.y,
+			z: l.z
+		}, _ = {
+			x: l.x,
+			y: l.y - 1,
+			z: l.z
+		}, v = {
+			x: l.x,
+			y: l.y + .1,
+			z: l.z
 		};
 		f = (async () => {
-			let e = await r.checkCollision(l), t = await r.checkCollision(u), n = e.collisionDist <= t.collisionDist ? e : t, i = n.collisionDist;
+			let e = await r.checkCollision(_), t = await r.checkCollision(v), n = e.collisionDist <= t.collisionDist ? e : t, i = n.collisionDist;
 			(n.materialIndex === -1 || i > c) && r.setColor({
 				r: 1,
 				g: 1,
 				b: 1
-			}), m(n, s), f = null;
+			}), m(n, g), f = null;
 		})().catch(() => {
 			f = null;
 		});
@@ -1546,6 +1561,7 @@ var N = class {
 			camSphericalT: this.camera.spherical.theta ?? 0,
 			camSphericalP: this.camera.spherical.phi ?? 0,
 			camFov: this.camera.fov ?? 90,
+			deltaTime: 1 / 60,
 			...this.initalCustomUniforms
 		});
 		this.rtUniform = r;
@@ -1640,9 +1656,9 @@ var N = class {
 	}
 	async start(e) {
 		await this.build(), e?.onBuild?.(), e?.once ? this.render?.({ camera: this.camera }) : (new C({
-			cb: () => {
-				for (let e of this.frameCallbacks) e();
-				e?.onFrame?.();
+			cb: (t) => {
+				for (let e of this.frameCallbacks) e(t);
+				e?.onFrame?.(t);
 			},
 			shoot: () => {
 				this.render?.({ camera: this.camera });
@@ -1670,7 +1686,8 @@ var N = class {
 		return this.render !== void 0;
 	}
 	setControlsToFree(e) {
-		return j(this, e);
+		let t = j(this, e);
+		return this.frameCallbacks.push(t.update), t;
 	}
 	setControlsTo3rdPerson(e) {
 		let t = M(this, e);
