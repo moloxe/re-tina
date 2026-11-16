@@ -20,6 +20,14 @@ async function getDevice() {
     },
   })
 
+  device.lost.then((info) => {
+    console.error('WebGPU device lost:', info.reason, info.message)
+  })
+
+  device.addEventListener('uncapturederror', (event) => {
+    console.error('WebGPU uncaptured error:', event.error.message)
+  })
+
   return {
     device,
     presentationFormat: navigator.gpu.getPreferredCanvasFormat(),
