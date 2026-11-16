@@ -1,4 +1,4 @@
-import{a as e,i as t,t as n}from"./hooks.module.DYOjMz2f.js";import{n as r}from"./editor.BqtoucOJ.js";import{t as i}from"./jsxRuntime.module.dOYewpzQ.js";function a(e,t){return`
+import{a as e,i as t,t as n}from"./hooks.module.DYOjMz2f.js";import{n as r}from"./editor.NMZ_soW8.js";import{t as i}from"./jsxRuntime.module.dOYewpzQ.js";function a(e,t){return`
     <!doctype html>
     <html>
         <head>
