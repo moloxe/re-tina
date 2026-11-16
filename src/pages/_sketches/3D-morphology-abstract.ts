@@ -2,7 +2,7 @@ import ReTina from '@ReTina'
 
 const rt = new ReTina({
   useInterlacing: true,
-  height: 600,
+  height: 300,
   functions: /* wgsl */ `
     fn sdD1(pos: vec3f, t: f32) -> f32 {
       return (pos.y - (
@@ -46,9 +46,11 @@ rt.registerMaterial({
   `,
   lightFunc: /* wgsl */ `
     let lambertian = dot(normal, -rd);
+    let h = rgb2hsv(normal * 0.5 + 0.5).x;
     let bri = 0.1 + lambertian * 0.5;
-    let finalColor = hsv2rgb(vec3<f32>(rgb2hsv(normal * 0.5 + 0.5).x, 0.8, bri)) + vec3f(pow(lambertian, 64f));
-    return vec4<f32>(finalColor, 1.);
+    let hsv = vec3f(h, 0.8, bri);
+    let finalColor = hsv2rgb(hsv) + pow(lambertian, 100f);
+    return vec4f(finalColor, 1.);
   `,
 })
 
@@ -65,7 +67,5 @@ rt.camera = {
   },
   fov: 120,
 }
-
-rt.setControlsToFree()
 
 rt.start()
