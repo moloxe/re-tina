@@ -32,16 +32,16 @@ const rt = new ReTina({
 rt.registerMaterial({
   sdFunc: /* wgsl */ `
     let t = U.time * 0.2 - 0.3f;
-    let bounce = pow(sin(t * 0.5), 2.);
+    let bounce = pow(abs(sin(t * 0.5)), 2.);
     let d1 = sdD1(pos, t) * 0.8;
     let d2 = sdD2(pos) * 0.7;
     let d3 = sdD3(pos);
     let d4 = d2;
     // ---
-    let f1 = pow(sin(t), 10f);
-    let f2 = pow(sin(t + 1. / 4. * PI), 16f);
-    let f3 = pow(sin(t + 2. / 4. * PI), 16f);
-    let f4 = pow(sin(t + 3. / 4. * PI), 16f);
+    let f1 = pow(abs(sin(t)), 10f);
+    let f2 = pow(abs(sin(t + 1. / 4. * PI)), 16f);
+    let f3 = pow(abs(sin(t + 2. / 4. * PI)), 16f);
+    let f4 = pow(abs(sin(t + 3. / 4. * PI)), 16f);
     return (d1 * f1 + d2 * f2 + d3 * f3 + d4 * f4);
   `,
   lightFunc: /* wgsl */ `
@@ -49,7 +49,7 @@ rt.registerMaterial({
     let h = rgb2hsv(normal * 0.5 + 0.5).x;
     let bri = 0.1 + lambertian * 0.5;
     let hsv = vec3f(h, 0.8, bri);
-    let finalColor = hsv2rgb(hsv) + pow(lambertian, 100f);
+    let finalColor = hsv2rgb(hsv) + pow(max(lambertian, 0.0), 100f);
     return vec4f(finalColor, 1.);
   `,
 })
