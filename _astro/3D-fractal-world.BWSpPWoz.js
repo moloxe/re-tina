@@ -1,4 +1,4 @@
-import{t as e}from"./_lib.vlPRVMD8.js";var t=new e({showFps:!0,height:512,useInterlacing:!0});t.registerMaterial({sdFunc:`
+import{t as e}from"./_lib.Baa8lfN5.js";var t=new e({showFps:!0,height:512,useInterlacing:!0});t.registerMaterial({sdFunc:`
     pos.z -= U.time * 0.5;
     pos = asin(sin(pos)) - vec3<f32>(3.0);
     for (var i = 0; i < 9; i++) {

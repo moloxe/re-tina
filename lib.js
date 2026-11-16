@@ -495,11 +495,17 @@ async function g() {
 	let e = await navigator.gpu.requestAdapter({ powerPreference: "high-performance" });
 	if (!e) throw Error("No adapter found");
 	let t = e.features.has("shader-f16");
-	return t || console.warn("shader-f16 not available"), {
-		device: await e.requestDevice({
-			requiredFeatures: t ? ["shader-f16"] : [],
-			requiredLimits: { maxBindGroups: e.limits.maxBindGroups }
-		}),
+	t || console.warn("shader-f16 not available");
+	let n = await e.requestDevice({
+		requiredFeatures: t ? ["shader-f16"] : [],
+		requiredLimits: { maxBindGroups: e.limits.maxBindGroups }
+	});
+	return n.lost.then((e) => {
+		console.error("WebGPU device lost:", e.reason, e.message);
+	}), n.addEventListener("uncapturederror", (e) => {
+		console.error("WebGPU uncaptured error:", e.error.message);
+	}), {
+		device: n,
 		presentationFormat: navigator.gpu.getPreferredCanvasFormat()
 	};
 }

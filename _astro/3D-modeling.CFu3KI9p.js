@@ -1,4 +1,4 @@
-import{t as e}from"./_lib.vlPRVMD8.js";var t=new e({showFps:!0});t.registerMaterial({color:{r:.5,g:.5,b:.5},sdFunc:`
+import{t as e}from"./_lib.Baa8lfN5.js";var t=new e({showFps:!0});t.registerMaterial({color:{r:.5,g:.5,b:.5},sdFunc:`
     let dBox = sdBox(pos, vec3<f32>(0.26, 0.14, 0.08));
     let dSphere = sdSphere(pos, 0.1);
     return opSmoothUnion(dBox, dSphere, 0.5);

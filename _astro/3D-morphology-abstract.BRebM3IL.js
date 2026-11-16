@@ -1,9 +1,4 @@
-var e=`import ReTina from '@ReTina'
-
-const rt = new ReTina({
-  useInterlacing: true,
-  height: 600,
-  functions: /* wgsl */ \`
+import{t as e}from"./_lib.Baa8lfN5.js";var t=new e({useInterlacing:!0,height:300,functions:`
     fn sdD1(pos: vec3f, t: f32) -> f32 {
       return (pos.y - (
         snoise3d(vec3f(pos.xz * 0.1, t * 2f)) +
@@ -26,11 +21,7 @@ const rt = new ReTina({
       d = opSmoothSubtraction(rEye, d, 0.1);
       return d;
     }
-  \`,
-})
-
-rt.registerMaterial({
-  sdFunc: /* wgsl */ \`
+  `});t.registerMaterial({sdFunc:`
     let t = U.time * 0.2 - 0.3f;
     let bounce = pow(sin(t * 0.5), 2.);
     let d1 = sdD1(pos, t) * 0.8;
@@ -43,30 +34,11 @@ rt.registerMaterial({
     let f3 = pow(sin(t + 2. / 4. * PI), 16f);
     let f4 = pow(sin(t + 3. / 4. * PI), 16f);
     return (d1 * f1 + d2 * f2 + d3 * f3 + d4 * f4);
-  \`,
-  lightFunc: /* wgsl */ \`
+  `,lightFunc:`
     let lambertian = dot(normal, -rd);
+    let h = rgb2hsv(normal * 0.5 + 0.5).x;
     let bri = 0.1 + lambertian * 0.5;
-    let finalColor = hsv2rgb(vec3<f32>(rgb2hsv(normal * 0.5 + 0.5).x, 0.8, bri)) + vec3f(pow(lambertian, 64f));
-    return vec4<f32>(finalColor, 1.);
-  \`,
-})
-
-rt.camera = {
-  pos: {
-    x: 27.3,
-    y: 8.7,
-    z: -16.66239690942345,
-  },
-  spherical: {
-    radius: 0,
-    theta: 0.40271877655055244,
-    phi: -0.7647831800262793,
-  },
-  fov: 120,
-}
-
-rt.setControlsToFree()
-
-rt.start()
-`;export{e as default};
+    let hsv = vec3f(h, 0.8, bri);
+    let finalColor = hsv2rgb(hsv) + pow(lambertian, 100f);
+    return vec4f(finalColor, 1.);
+  `}),t.camera={pos:{x:27.3,y:8.7,z:-16.66239690942345},spherical:{radius:0,theta:.40271877655055244,phi:-.7647831800262793},fov:120},t.start();

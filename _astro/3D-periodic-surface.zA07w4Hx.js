@@ -1,4 +1,4 @@
-import{t as e}from"./_lib.vlPRVMD8.js";var t=new e;t.registerMaterial({sdFunc:`
+import{t as e}from"./_lib.Baa8lfN5.js";var t=new e;t.registerMaterial({sdFunc:`
     let t = U.time * .1;
     pos = rotate(pos, vec3<f32>(0, t, -t));
     pos += vec3<f32>(cos(-t) * 16, 2.4, sin(-t) * 16);

@@ -1,4 +1,4 @@
-import{t as e}from"./_lib.vlPRVMD8.js";var t=new e({showFps:!0,height:512,useInterlacing:!0});t.registerMaterial({sdFunc:`
+import{t as e}from"./_lib.Baa8lfN5.js";var t=new e({showFps:!0,height:512,useInterlacing:!0});t.registerMaterial({sdFunc:`
     var power = 6 + 4 * sin(U.time * 0.1);
     var z = pos;
     var c = pos;

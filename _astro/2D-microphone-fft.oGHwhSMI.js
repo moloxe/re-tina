@@ -1,4 +1,4 @@
-import{t as e}from"./getFFTGetter.B1DvvLCV.js";import{t}from"./_lib.vlPRVMD8.js";var n=2048,r=new t({buffers:[{size:n*4}],usePrevFrameTex:!0,main:`
+import{t as e}from"./getFFTGetter.B1DvvLCV.js";import{t}from"./_lib.Baa8lfN5.js";var n=2048,r=new t({buffers:[{size:n*4}],usePrevFrameTex:!0,main:`
     var coord = uv * vec2f(U.width, U.height); coord.x += 1.;
     let prev = getPrevFrameTexSample(coord / vec2f(U.width, U.height));
     let freq = 1.0 - uv.y;
